@@ -1,0 +1,15 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-officehours-staging-03512-authRole",
+      "UnauthRoleArn": "arn:aws:iam::993832516582:role/amplify-officehours-staging-03512-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::993832516582:role/amplify-officehours-staging-03512-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-officehours-staging-03512-deployment",
+      "UnauthRoleName": "amplify-officehours-staging-03512-unauthRole",
+      "StackName": "amplify-officehours-staging-03512",
+      "StackId": "arn:aws:cloudformation:us-east-1:993832516582:stack/amplify-officehours-staging-03512/d745cfe0-701a-11ec-9546-0ac2bd115d07",
+      "AmplifyAppId": "d3viqlqndqi0wo"
+    }
+  }
+}
