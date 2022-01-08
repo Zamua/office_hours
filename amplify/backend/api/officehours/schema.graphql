@@ -1,0 +1,20 @@
+type History @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  queuerId: ID
+  officeQueueId: ID
+  enqueueTime: AWSDateTime
+  dequeueTime: AWSDateTime
+}
+
+type Queuer @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  officeQueueIds: [ID]
+}
+
+type OfficeQueue @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  queuerIds: [ID]
+  name: String
+}
+ 
