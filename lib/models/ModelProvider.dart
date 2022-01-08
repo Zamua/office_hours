@@ -23,16 +23,18 @@ import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_inte
 import 'History.dart';
 import 'OfficeQueue.dart';
 import 'Queuer.dart';
+import 'QueuerOfficeQueue.dart';
 
 export 'History.dart';
 export 'OfficeQueue.dart';
 export 'Queuer.dart';
+export 'QueuerOfficeQueue.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "4036622f3572450866e35ef55d87f2d2";
+  String version = "85e4bbe4e2e23a8c7cd03bf73feca7b2";
   @override
-  List<ModelSchema> modelSchemas = [History.schema, OfficeQueue.schema, Queuer.schema];
+  List<ModelSchema> modelSchemas = [History.schema, OfficeQueue.schema, Queuer.schema, QueuerOfficeQueue.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
@@ -49,6 +51,10 @@ class ModelProvider implements ModelProviderInterface {
     break;
     case "Queuer": {
     return Queuer.classType;
+    }
+    break;
+    case "QueuerOfficeQueue": {
+    return QueuerOfficeQueue.classType;
     }
     break;
     default: {

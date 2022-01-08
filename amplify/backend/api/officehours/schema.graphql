@@ -9,12 +9,12 @@ type History @model @auth(rules: [{allow: public}]) {
 type Queuer @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String
-  officeQueueIds: [ID]
+  officeQueues: [OfficeQueue] @manyToMany(relationName: "QueuerOfficeQueue")
 }
 
 type OfficeQueue @model @auth(rules: [{allow: public}]) {
   id: ID!
-  queuerIds: [ID]
   name: String
+  queuers: [Queuer] @manyToMany(relationName: "QueuerOfficeQueue")
 }
  

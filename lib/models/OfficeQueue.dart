@@ -19,6 +19,7 @@
 
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
+import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -29,8 +30,8 @@ import 'package:flutter/foundation.dart';
 class OfficeQueue extends Model {
   static const classType = const _OfficeQueueModelType();
   final String id;
-  final List<String>? _queuerIds;
   final String? _name;
+  final List<QueuerOfficeQueue>? _queuers;
 
   @override
   getInstanceType() => classType;
@@ -40,21 +41,21 @@ class OfficeQueue extends Model {
     return id;
   }
   
-  List<String>? get queuerIds {
-    return _queuerIds;
-  }
-  
   String? get name {
     return _name;
   }
   
-  const OfficeQueue._internal({required this.id, queuerIds, name}): _queuerIds = queuerIds, _name = name;
+  List<QueuerOfficeQueue>? get queuers {
+    return _queuers;
+  }
   
-  factory OfficeQueue({String? id, List<String>? queuerIds, String? name}) {
+  const OfficeQueue._internal({required this.id, name, queuers}): _name = name, _queuers = queuers;
+  
+  factory OfficeQueue({String? id, String? name, List<QueuerOfficeQueue>? queuers}) {
     return OfficeQueue._internal(
       id: id == null ? UUID.getUUID() : id,
-      queuerIds: queuerIds != null ? List<String>.unmodifiable(queuerIds) : queuerIds,
-      name: name);
+      name: name,
+      queuers: queuers != null ? List<QueuerOfficeQueue>.unmodifiable(queuers) : queuers);
   }
   
   bool equals(Object other) {
@@ -66,8 +67,8 @@ class OfficeQueue extends Model {
     if (identical(other, this)) return true;
     return other is OfficeQueue &&
       id == other.id &&
-      DeepCollectionEquality().equals(_queuerIds, other._queuerIds) &&
-      _name == other._name;
+      _name == other._name &&
+      DeepCollectionEquality().equals(_queuers, other._queuers);
   }
   
   @override
@@ -79,32 +80,38 @@ class OfficeQueue extends Model {
     
     buffer.write("OfficeQueue {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("queuerIds=" + (_queuerIds != null ? _queuerIds!.toString() : "null") + ", ");
     buffer.write("name=" + "$_name");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  OfficeQueue copyWith({String? id, List<String>? queuerIds, String? name}) {
+  OfficeQueue copyWith({String? id, String? name, List<QueuerOfficeQueue>? queuers}) {
     return OfficeQueue(
       id: id ?? this.id,
-      queuerIds: queuerIds ?? this.queuerIds,
-      name: name ?? this.name);
+      name: name ?? this.name,
+      queuers: queuers ?? this.queuers);
   }
   
   OfficeQueue.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _queuerIds = json['queuerIds']?.cast<String>(),
-      _name = json['name'];
+      _name = json['name'],
+      _queuers = json['queuers'] is List
+        ? (json['queuers'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => QueuerOfficeQueue.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'queuerIds': _queuerIds, 'name': _name
+    'id': id, 'name': _name, 'queuers': _queuers?.map((QueuerOfficeQueue? e) => e?.toJson()).toList()
   };
 
   static final QueryField ID = QueryField(fieldName: "officeQueue.id");
-  static final QueryField QUEUERIDS = QueryField(fieldName: "queuerIds");
   static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField QUEUERS = QueryField(
+    fieldName: "queuers",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (QueuerOfficeQueue).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "OfficeQueue";
     modelSchemaDefinition.pluralName = "OfficeQueues";
@@ -123,16 +130,16 @@ class OfficeQueue extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: OfficeQueue.QUEUERIDS,
-      isRequired: false,
-      isArray: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.collection, ofModelName: describeEnum(ModelFieldTypeEnum.string))
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: OfficeQueue.NAME,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: OfficeQueue.QUEUERS,
+      isRequired: false,
+      ofModelName: (QueuerOfficeQueue).toString(),
+      associatedKey: QueuerOfficeQueue.OFFICEQUEUE
     ));
   });
 }
